@@ -11,7 +11,7 @@
 void encerra_execucao(int exit_code){
     fecha_UART();
     printf("Encerrando a execução do programa...\n");
-    exit_code = std::min(exit_code, 1);
+    exit_code = std::min(exit_code, 2);
     exit(exit_code);
 }
 
