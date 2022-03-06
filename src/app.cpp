@@ -12,10 +12,9 @@
 
 
 void encerra_execucao(int exit_code){
-    fecha_UART();
     printf("Encerrando a execução do programa...\n");
-    exit_code = std::min(exit_code, 1);
-    exit(exit_code);
+    fecha_UART();
+    exit( std::min(exit_code, 1) );
 }
 
 
@@ -59,10 +58,10 @@ void menu(){
     while (1)
     {
         int opcao = -1;
-        printf("Escolha o numero da opção que deseja:\n");
+        printf("Escolha o modo de controle:\n");
         printf("[1] Solicita temperatura interna:\n");
         printf("[2] Solicita temperatura do potenciometro:\n");
-        printf("[3] Receber uma string:\n");
+        printf("[3] Potenciometro:\n");
         printf("[4] Enviar um int:\n");
         printf("[5] Enviar um float:\n");
         printf("[6] Enviar uma string:\n");
