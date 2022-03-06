@@ -2,7 +2,19 @@
 #include <crc.h>
 #include <uart.h>
 #include <string.h> 
-#include <unistd.h> 
+#include <unistd.h>
+#include <stdlib.h>
+#include <signal.h>
+#include <algorithm>
+
+
+void encerra_execucao(int exit_code){
+    fecha_UART();
+    printf("Encerrando a execução do programa...\n");
+    exit_code = std::min(exit_code, 1);
+    exit(exit_code);
+}
+
 
 int conta_bytes_lidos(unsigned char *buffer){
     int i = 0;
@@ -67,7 +79,8 @@ void menu(){
 }
 
 void init_APP(){
+    signal(SIGINT, encerra_execucao);
     configura_UART();
     menu();
-    fecha_UART();
+    encerra_execucao(0);
 }
