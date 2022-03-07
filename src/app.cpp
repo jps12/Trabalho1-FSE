@@ -11,15 +11,24 @@
 #include "pid.h"
 #include "app.h"
 #include "reflow.h"
+#include "terminal.h"
+
+#define TEST_LOCAL
 
 void encerra_execucao(int exit_code){
     printf("Encerrando a execução do programa...\n");
+
+#ifndef TEST_LOCAL
+
     imprime_string_display("Desligando...");
-    fecha_log();
     desliga_resistencia();
     desliga_ventoinha();
     fecha_UART();
     imprime_string_display("Recompilando.");
+
+#endif
+
+    fecha_log();
     exit( std::min(exit_code, 1) );
 }
 
@@ -40,8 +49,12 @@ void preconfigure_constantes(){
 
 void menu(int value = 0){
 
+#ifndef TEST_LOCAL
+
     desliga_resistencia();
     desliga_ventoinha();
+
+#endif
 
     while (1)
     {
@@ -59,14 +72,19 @@ void menu(int value = 0){
         switch (opcao)
         {
         case 1:
-            printf("Pressione ctrl + \\ para sair desse modo\n");
+            printf("Pressione ctrl + \\ para sair desse modo e voltar ao menu\n");
             sleep(5);
-            system("clear");
             controle_potenciometro();
             break;
         case 2:
+            printf("Pressione ctrl + \\ para sair desse modo e voltar ao menu\n");
+            sleep(5);
             controle_reflow();
-            sleep(10);
+            break;
+        case 3:
+            printf("Pressione ctrl + \\ para sair desse modo e voltar ao menu\n");
+            sleep(5);
+            terminal_controle();
             break;
         case 9:
             return;
@@ -81,13 +99,19 @@ void menu(int value = 0){
 }
 
 void init_APP(){
+
+#ifndef TEST_LOCAL
+
     imprime_string_display("Carregando...");
-    signal(SIGINT, encerra_execucao);
-    signal(SIGQUIT, menu);
     wiringPiSetup();
     configura_UART();
-    inicia_log();
     conecta_bme();
+
+#endif
+    
+    signal(SIGINT, encerra_execucao);
+    signal(SIGQUIT, menu);
+    inicia_log();
     // preconfigure_constantes();
     menu();
     encerra_execucao(0);
