@@ -2,6 +2,7 @@
 #define LOG_H_
 
 void escreve_temp_log(int TI, int TR, int TE);
+void escreve_string_log(std::string mensagem);
 void fecha_log();
 void inicia_log();
 

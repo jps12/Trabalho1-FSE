@@ -10,15 +10,16 @@
 #include "logger.h"
 #include "pid.h"
 #include "app.h"
+#include "reflow.h"
 
 void encerra_execucao(int exit_code){
     printf("Encerrando a execução do programa...\n");
-    imprime_string_display("Desligando...");
+    // imprime_string_display("Desligando...");
     fecha_log();
-    desliga_resistencia();
-    desliga_ventoinha();
-    fecha_UART();
-    imprime_string_display("Desligado.");
+    // desliga_resistencia();
+    // desliga_ventoinha();
+    // fecha_UART();
+    // imprime_string_display("Desligado.");
     exit( std::min(exit_code, 1) );
 }
 
@@ -39,11 +40,12 @@ void preconfigure_constantes(){
 
 void menu(int value = 0){
 
-    desliga_resistencia();
-    desliga_ventoinha();
+    // desliga_resistencia();
+    // desliga_ventoinha();
 
     while (1)
     {
+        system("clear");
         int opcao = -1;
         printf("Escolha o modo de controle:\n");
         printf("[1] Potenciometro:\n");
@@ -57,11 +59,16 @@ void menu(int value = 0){
         switch (opcao)
         {
         case 1:
-            printf("[1] Potenciometro:\n");
+            printf("Pressione ctrl + \\ para sair desse modo\n");
+            sleep(5);
+            system("clear");
             controle_potenciometro();
             break;
+        case 2:
+            controle_reflow();
+            sleep(10);
+            break;
         case 9:
-            puts("Finalizando o programa\n");
             return;
             break;
         default:
@@ -70,18 +77,17 @@ void menu(int value = 0){
             break;
         }
 
-        system("clear");
     }
 }
 
 void init_APP(){
-    imprime_string_display("Carregando...");
+    // imprime_string_display("Carregando...");
     signal(SIGINT, encerra_execucao);
     signal(SIGQUIT, menu);
-    wiringPiSetup();
-    configura_UART();
+    // wiringPiSetup();
+    // configura_UART();
     inicia_log();
-    conecta_bme();
+    // conecta_bme();
     // preconfigure_constantes();
     menu();
     encerra_execucao(0);
