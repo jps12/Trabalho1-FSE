@@ -62,9 +62,9 @@ void CRC_configura(unsigned char *buffer, int size)
     memcpy(buffer + size - 2, &crc16, 2);
 }
 
-bool CRC_verifica(std::string buffer, int size){
-    short crc16 = calcula_CRC((unsigned char *)buffer.c_str(), size);
+bool CRC_verifica(unsigned char * buffer, int size){
+    short crc16 = calcula_CRC(buffer, size);
     short _crc16;
-    memcpy(&_crc16, buffer.c_str() + size - 2, 2);
+    memcpy(&_crc16, buffer + size - 2, 2);
     return crc16 == _crc16;
 }

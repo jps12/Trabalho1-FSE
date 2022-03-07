@@ -86,6 +86,10 @@ unsigned char *UART_recebe_resposta()
         rx_buffer[rx_length] = '\0';
     }
 
+    if (!CRC_verifica(rx_buffer, rx_length)){
+        printf("Erro no CRC\n");
+    }
+
     return rx_buffer;
 }
 
