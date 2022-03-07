@@ -78,6 +78,7 @@ void menu(){
 
 void init_APP(){
     signal(SIGINT, encerra_execucao);
+    wiringPiSetup();
     configura_UART();
     desliga_resistencia();
     desliga_ventoinha();

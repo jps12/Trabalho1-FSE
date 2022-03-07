@@ -194,11 +194,11 @@ void imprime_display(float TI,float TR, float TE, std::string titulo)   {
   inicia_display(); // setup LCD
   lcdLoc(LINE1);
   typeln(titulo.c_str());
-  typeln("TI");
+  typeln("TI:");
   typeFloat(TI);
-  typeln(" TR");
-  typeFloat(TR);
   lcdLoc(LINE2);
-  typeln("TE");
+  typeln("TR:");
+  typeFloat(TR);
+  typeln(" TE:");
   typeFloat(TE);
 }
