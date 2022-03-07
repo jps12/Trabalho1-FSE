@@ -1,6 +1,7 @@
-#include <app.h>
+#include "app.h"
 
-int main(int argc, const char * argv[]) {
-    init_APP();
+int main(int argc, const char *argv[])
+{
+    app_inicia();
     return 0;
 }

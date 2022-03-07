@@ -4,7 +4,7 @@
  *  Created on: 18/03/2014
  *      Author: Renato Coral Sampaio
  */
-#include<string.h>
+#include <string.h>
 short CRC16(short crc, char data)
 {
     const unsigned short tbl[256] = {
@@ -43,16 +43,19 @@ short CRC16(short crc, char data)
     return ((crc & 0xFF00) >> 8) ^ tbl[(crc & 0x00FF) ^ (data & 0x00FF)];
 }
 
-short calcula_CRC(unsigned char *commands, int size) {
-	int i;
-	short crc = 0;
-	for(i=0;i<size;i++) {
-		crc = CRC16(crc, commands[i]);
-	}
-	return crc;
+short calcula_CRC(unsigned char *commands, int size)
+{
+    int i;
+    short crc = 0;
+    for (i = 0; i < size; i++)
+    {
+        crc = CRC16(crc, commands[i]);
+    }
+    return crc;
 }
 
-void configura_CRC(unsigned char *buffer, int size){
+void CRC_configura(unsigned char *buffer, int size)
+{
     short crc16 = calcula_CRC(buffer, size - 2);
-    memcpy(buffer+size-2, &crc16, 2);
+    memcpy(buffer + size - 2, &crc16, 2);
 }

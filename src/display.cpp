@@ -1,103 +1,109 @@
 /*
-*
-* by Lewis Loflin www.bristolwatch.com lewis@bvu.net
-* http://www.bristolwatch.com/rpi/i2clcd.htm
-* Using wiringPi by Gordon Henderson
-*
-*
-* Port over lcd_i2c.py to C and added improvements.
-* Supports 16x2 and 20x4 screens.
-* This was to learn now the I2C lcd displays operate.
-* There is no warrenty of any kind use at your own risk.
-*
-*/
-
+ *
+ * by Lewis Loflin www.bristolwatch.com lewis@bvu.net
+ * http://www.bristolwatch.com/rpi/i2clcd.htm
+ * Using wiringPi by Gordon Henderson
+ *
+ *
+ * Port over lcd_i2c.py to C and added improvements.
+ * Supports 16x2 and 20x4 screens.
+ * This was to learn now the I2C lcd displays operate.
+ * There is no warrenty of any kind use at your own risk.
+ *
+ */
 
 #include <wiringPiI2C.h>
 #include <wiringPi.h>
 #include <string>
 #include <stdlib.h>
 #include <stdio.h>
-#include <display.h>
-#include <app.h>
+
+#include "display.h"
+#include "app.h"
 
 // Define some device parameters
-#define I2C_ADDR   0x27 // I2C device address
+#define I2C_ADDR 0x27 // I2C device address
 
 // Define some device constants
-#define LCD_CHR  1 // Mode - Sending data
-#define LCD_CMD  0 // Mode - Sending command
+#define LCD_CHR 1 // Mode - Sending data
+#define LCD_CMD 0 // Mode - Sending command
 
-#define LINE1  0x80 // 1st line
-#define LINE2  0xC0 // 2nd line
+#define LINE1 0x80 // 1st line
+#define LINE2 0xC0 // 2nd line
 
-#define LCD_BACKLIGHT   0x08  // On
+#define LCD_BACKLIGHT 0x08 // On
 // LCD_BACKLIGHT = 0x00  # Off
 
-#define ENABLE  0b00000100 // Enable bit
+#define ENABLE 0b00000100 // Enable bit
 
-void inicia_display(void);
+void display_inicia(void);
 void lcd_byte(int bits, int mode);
 void lcd_toggle_enable(int bits);
 
 // added by Lewis
 void typeInt(int i);
 void typeFloat(float myFloat);
-void lcdLoc(int line); //move cursor
-void ClrLcd(void); // clr LCD return home
+void lcdLoc(int line); // move cursor
+void ClrLcd(void);     // clr LCD return home
 void typeln(const char *s);
 void typeChar(char val);
-int fd;  // seen by all subroutines
+int fd; // seen by all subroutines
 
 // float to string
-void typeFloat(float myFloat)   {
+void typeFloat(float myFloat)
+{
   char buffer[20];
-  sprintf(buffer, "%4.2f",  myFloat);
+  sprintf(buffer, "%4.2f", myFloat);
   typeln(buffer);
 }
 
 // int to string
-void typeInt(int i)   {
+void typeInt(int i)
+{
   char array1[20];
-  sprintf(array1, "%d",  i);
+  sprintf(array1, "%d", i);
   typeln(array1);
 }
 
 // clr lcd go home loc 0x80
-void ClrLcd(void)   {
+void ClrLcd(void)
+{
   lcd_byte(0x01, LCD_CMD);
   lcd_byte(0x02, LCD_CMD);
 }
 
 // go to location on LCD
-void lcdLoc(int line)   {
+void lcdLoc(int line)
+{
   lcd_byte(line, LCD_CMD);
 }
 
 // out char to LCD at current position
-void typeChar(char val)   {
+void typeChar(char val)
+{
 
   lcd_byte(val, LCD_CHR);
 }
 
-
 // this allows use of any size string
-void typeln(const char *s)   {
+void typeln(const char *s)
+{
 
-  while ( *s ) lcd_byte(*(s++), LCD_CHR);
-
+  while (*s)
+    lcd_byte(*(s++), LCD_CHR);
 }
 
-void lcd_byte(int bits, int mode)   {
+void lcd_byte(int bits, int mode)
+{
 
-  //Send byte to data pins
-  // bits = the data
-  // mode = 1 for data, 0 for command
+  // Send byte to data pins
+  //  bits = the data
+  //  mode = 1 for data, 0 for command
   int bits_high;
   int bits_low;
   // uses the two half byte writes to LCD
-  bits_high = mode | (bits & 0xF0) | LCD_BACKLIGHT ;
-  bits_low = mode | ((bits << 4) & 0xF0) | LCD_BACKLIGHT ;
+  bits_high = mode | (bits & 0xF0) | LCD_BACKLIGHT;
+  bits_low = mode | ((bits << 4) & 0xF0) | LCD_BACKLIGHT;
 
   // High bits
   wiringPiI2CReadReg8(fd, bits_high);
@@ -108,7 +114,8 @@ void lcd_byte(int bits, int mode)   {
   lcd_toggle_enable(bits_low);
 }
 
-void lcd_toggle_enable(int bits)   {
+void lcd_toggle_enable(int bits)
+{
   // Toggle enable pin on LCD display
   delayMicroseconds(500);
   wiringPiI2CReadReg8(fd, (bits | ENABLE));
@@ -117,8 +124,8 @@ void lcd_toggle_enable(int bits)   {
   delayMicroseconds(500);
 }
 
-
-void inicia_display()   {
+void display_inicia()
+{
   // Initialise display
   lcd_byte(0x33, LCD_CMD); // Initialise
   lcd_byte(0x32, LCD_CMD); // Initialise
@@ -129,13 +136,15 @@ void inicia_display()   {
   delayMicroseconds(500);
 }
 
-void imprime_temp_display(float TI,float TR, float TE, std::string titulo)   {
+void display_imprime_temp(float TI, float TR, float TE, std::string titulo)
+{
 
-  if (wiringPiSetup () == -1) exit (1);
+  if (wiringPiSetup() == -1)
+    encerra_execucao(1);
 
   fd = wiringPiI2CSetup(I2C_ADDR);
 
-  inicia_display(); // setup LCD
+  display_inicia(); // setup LCD
   lcdLoc(LINE1);
   typeln(titulo.c_str());
   typeln("TI:");
@@ -147,13 +156,15 @@ void imprime_temp_display(float TI,float TR, float TE, std::string titulo)   {
   typeFloat(TE);
 }
 
-void imprime_string_display(std::string linha1, std::string linha2){
+void display_imprime_string(std::string linha1, std::string linha2)
+{
 
-  if (wiringPiSetup() == -1) encerra_execucao(1);
+  if (wiringPiSetup() == -1)
+    encerra_execucao(1);
 
   fd = wiringPiI2CSetup(I2C_ADDR);
 
-  inicia_display(); // setup LCD
+  display_inicia(); // setup LCD
   lcdLoc(LINE1);
   typeln(linha1.c_str());
   lcdLoc(LINE2);

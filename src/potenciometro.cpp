@@ -1,30 +1,34 @@
-#include <uart.h>
-#include <pid.h>
-#include <gpio.h>
-#include <bme_aux.h>
-#include <display.h>
-#include <logger.h>
 #include <unistd.h>
+
+#include "logger.h"
+#include "display.h"
+#include "bme_aux.h"
+#include "uart.h"
+#include "gpio.h"
+#include "pid.h"
 
 #define TEMP_INTERNA 0xC1
 #define TEMP_POTENCIOMETRO 0xC2
-#define COMANDO_USUARIO 0xC3
 
-void controle_potenciometro(){
+void potenciometro_controle()
+{
     double TI, TR, TE, intensidade = 0;
-    while (1){
-        TI = solicita_uart<float>(TEMP_INTERNA);
+    while (1)
+    {
+        TI = UART_solicita<float>(TEMP_INTERNA);
+        
         intensidade = pid_controle(TI);
+        gpio_controle_temperatura(intensidade);
 
-        controle_temperatura(intensidade);
-
-        TR = solicita_uart<float>(TEMP_POTENCIOMETRO);
+        TR = UART_solicita<float>(TEMP_POTENCIOMETRO);
 
         pid_atualiza_referencia(TR);
 
-        TE = get_current_temperature();
-        imprime_temp_display(TI, TR, TE, "PID ");
-        escreve_temp_log(TI, TR, TE);
+        TE = bme_temperatura_atual();
+
+        display_imprime_temp(TI, TR, TE, "PID ");
+        logger_escreve_temp(TI, TR, TE);
+        
         sleep(1);
     }
 }

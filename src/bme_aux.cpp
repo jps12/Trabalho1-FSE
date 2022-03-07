@@ -7,12 +7,13 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include <bme.h>
+#include "bme.h"
 
 int i2c_filestream;
 struct bme280_dev dev;
 
-int8_t user_i2c_read(uint8_t id, uint8_t reg_addr, uint8_t *data, uint16_t len) {
+int8_t user_i2c_read(uint8_t id, uint8_t reg_addr, uint8_t *data, uint16_t len)
+{
   write(i2c_filestream, &reg_addr, 1);
   read(i2c_filestream, data, len);
 
@@ -21,13 +22,15 @@ int8_t user_i2c_read(uint8_t id, uint8_t reg_addr, uint8_t *data, uint16_t len) 
 
 void user_delay_ms(uint32_t period) { usleep(period * 1000); }
 
-int8_t user_i2c_write(uint8_t id, uint8_t reg_addr, uint8_t *data, uint16_t len) {
+int8_t user_i2c_write(uint8_t id, uint8_t reg_addr, uint8_t *data, uint16_t len)
+{
   int8_t *buf;
 
-  buf = (int8_t *) malloc(len + 1);
+  buf = (int8_t *)malloc(len + 1);
   buf[0] = reg_addr;
   memcpy(buf + 1, data, len);
-  if (write(i2c_filestream, buf, len + 1) < len) {
+  if (write(i2c_filestream, buf, len + 1) < len)
+  {
     return BME280_E_COMM_FAIL;
   }
 
@@ -36,7 +39,8 @@ int8_t user_i2c_write(uint8_t id, uint8_t reg_addr, uint8_t *data, uint16_t len)
   return BME280_OK;
 }
 
-float get_current_temperature() {
+float bme_temperatura_atual()
+{
   uint8_t settings_sel = 0;
   uint32_t req_delay;
   struct bme280_data comp_data;
@@ -59,7 +63,8 @@ float get_current_temperature() {
   return comp_data.temperature;
 }
 
-void conecta_bme() {
+void bme_conecta()
+{
 
   int8_t rslt = BME280_OK;
   char i2c_file[] = "/dev/i2c-1";
@@ -70,18 +75,21 @@ void conecta_bme() {
   dev.write = user_i2c_write;
   dev.delay_ms = user_delay_ms;
 
-  if ((i2c_filestream = open(i2c_file, O_RDWR)) < 0) {
+  if ((i2c_filestream = open(i2c_file, O_RDWR)) < 0)
+  {
     exit(1);
   }
 
-  if (ioctl(i2c_filestream, I2C_SLAVE, dev.dev_id) < 0) {
+  if (ioctl(i2c_filestream, I2C_SLAVE, dev.dev_id) < 0)
+  {
     fprintf(stderr, "Failed to acquire bus access and/or talk to slave.\n");
     exit(1);
   }
 
   /* Initialize the bme280 */
   rslt = bme280_init(&dev);
-  if (rslt != BME280_OK) {
+  if (rslt != BME280_OK)
+  {
     fprintf(stderr, "Failed to initialize the device (code %+d).\n", rslt);
     exit(1);
   }
