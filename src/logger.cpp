@@ -24,7 +24,7 @@ void inicia_log(){
     }
 }
 
-void escreve_temp_log(int TI, int TR, int TE){
+void escreve_temp_log(float TI, float TR, float TE){
     get_tempo();
     arquivo << tempo_agora << ',' << TI << ',' << TR << ',' << TE << '\n';
 }

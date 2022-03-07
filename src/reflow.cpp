@@ -78,11 +78,11 @@ void controle_reflow(){
 
         TE = get_current_temperature();
 
-        imprime_temp_display(TI, TR, TE, "PID ");
+        imprime_temp_display(TI, TR, TE, "REFLOW ");
         escreve_temp_log(TI, TR, TE);
 
         std::string message = "Tempo: " + std::to_string(tempo_atual) + ",TR: " + std::to_string(TR);
-        escreve_string_log(message);
+        escreve_temp_log(TI, TR, TE);
         sleep(1);
     }
 }

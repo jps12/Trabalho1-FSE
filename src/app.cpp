@@ -14,12 +14,12 @@
 
 void encerra_execucao(int exit_code){
     printf("Encerrando a execução do programa...\n");
-    // imprime_string_display("Desligando...");
+    imprime_string_display("Desligando...");
     fecha_log();
-    // desliga_resistencia();
-    // desliga_ventoinha();
-    // fecha_UART();
-    // imprime_string_display("Desligado.");
+    desliga_resistencia();
+    desliga_ventoinha();
+    fecha_UART();
+    imprime_string_display("Recompilando.");
     exit( std::min(exit_code, 1) );
 }
 
@@ -40,8 +40,8 @@ void preconfigure_constantes(){
 
 void menu(int value = 0){
 
-    // desliga_resistencia();
-    // desliga_ventoinha();
+    desliga_resistencia();
+    desliga_ventoinha();
 
     while (1)
     {
@@ -81,13 +81,13 @@ void menu(int value = 0){
 }
 
 void init_APP(){
-    // imprime_string_display("Carregando...");
+    imprime_string_display("Carregando...");
     signal(SIGINT, encerra_execucao);
     signal(SIGQUIT, menu);
-    // wiringPiSetup();
-    // configura_UART();
+    wiringPiSetup();
+    configura_UART();
     inicia_log();
-    // conecta_bme();
+    conecta_bme();
     // preconfigure_constantes();
     menu();
     encerra_execucao(0);
