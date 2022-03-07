@@ -4,7 +4,7 @@ BLDDIR = .
 INCDIR = $(BLDDIR)/inc
 SRCDIR = $(BLDDIR)/src
 OBJDIR = $(BLDDIR)/obj
-CFLAGS = -std=c++17 -c -Wall -I$(INCDIR)
+CFLAGS = -std=c++17 -c -w -Wall -I$(INCDIR)
 SRC = $(wildcard $(SRCDIR)/*.cpp)
 OBJ = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SRC))
 EXE = bin/bin

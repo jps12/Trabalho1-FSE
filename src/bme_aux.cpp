@@ -9,6 +9,8 @@
 
 #include <bme.h>
 
+int i2c_filestream;
+
 int8_t user_i2c_read(uint8_t id, uint8_t reg_addr, uint8_t *data, uint16_t len) {
   write(i2c_filestream, &reg_addr, 1);
   read(i2c_filestream, data, len);
