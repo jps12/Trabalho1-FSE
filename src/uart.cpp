@@ -47,16 +47,11 @@ void UART_escreve_mensagem(unsigned char *buffer, int size)
 {
     UART_checa();
 
-    printf("Escrevendo caracteres na UART ...");
     int count = write(uart0_filestream, &buffer[0], size);
 
     if (count < 0)
     {
         printf("UART TX error\n");
-    }
-    else
-    {
-        printf(" %d bytes escrito.\n", count);
     }
 }
 
@@ -109,8 +104,6 @@ tipo_retorno UART_solicita(int sub_codigo)
 
     CRC_configura(buffer, 9);
 
-    printf("Buffers de memória criados!\n");
-
     UART_escreve_mensagem(&buffer[0], 9);
 
     sleep(1);
@@ -140,8 +133,6 @@ int UART_envia_uart(int sub_codigo, std::string value)
     *p_buffer++ = value[3];
 
     CRC_configura(buffer, 13);
-
-    printf("Buffers de memória criados!\n");
 
     UART_escreve_mensagem(&buffer[0], 13);
 

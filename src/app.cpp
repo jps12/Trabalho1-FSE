@@ -21,11 +21,10 @@ void encerra_execucao(int exit_code)
 
 #ifndef TEST_LOCAL
 
-    display_imprime_string("Desligando...");
     gpio_desliga_resistencia();
     gpio_desliga_ventoinha();
     UART_encerra();
-    display_imprime_string("Recompilando.");
+    display_imprime_string("Desligado.");
 
 #endif
 
@@ -95,17 +94,17 @@ void menu(int value = 0)
         switch (opcao)
         {
         case 1:
-            printf("Pressione ctrl + \\ para sair desse modo e voltar ao menu\n");
+            printf("Pressione ctrl + \\ ou ctrl + c para sair desse modo encerrar o programa\n");
             sleep(5);
             potenciometro_controle();
             break;
         case 2:
-            printf("Pressione ctrl + \\ para sair desse modo e voltar ao menu\n");
+            printf("Pressione ctrl + \\ ou ctrl + c para sair desse modo encerrar o programa\n");
             sleep(5);
             reflow_controle();
             break;
         case 3:
-            printf("Pressione ctrl + \\ para sair desse modo e voltar ao menu\n");
+            printf("Pressione ctrl + \\ ou ctrl + c para sair desse modo encerrar o programa\n");
             sleep(5);
             terminal_controle();
             break;

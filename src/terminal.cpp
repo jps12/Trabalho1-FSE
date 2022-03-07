@@ -30,7 +30,7 @@ void terminal_controle()
         pid_atualiza_referencia(TR);
 
         TE = bme_temperatura_atual();
-        display_imprime_temp(TI, TR, TE, "PID ");
+        display_imprime_temp(TI, TR, TE, "TERM ");
         logger_escreve_temp(TI, TR, TE);
         sleep(1);
     }

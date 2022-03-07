@@ -26,7 +26,7 @@ void potenciometro_controle()
 
         TE = bme_temperatura_atual();
 
-        display_imprime_temp(TI, TR, TE, "PID ");
+        display_imprime_temp(TI, TR, TE, "POTEN. ");
         logger_escreve_temp(TI, TR, TE);
         
         sleep(1);

@@ -63,7 +63,7 @@ void CRC_configura(unsigned char *buffer, int size)
 }
 
 bool CRC_verifica(unsigned char * buffer, int size){
-    short crc16 = calcula_CRC(buffer, size);
+    short crc16 = calcula_CRC(buffer, size - 2);
     short _crc16;
     memcpy(&_crc16, buffer + size - 2, 2);
     return crc16 == _crc16;
