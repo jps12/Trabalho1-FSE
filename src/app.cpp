@@ -5,6 +5,7 @@
 #include <algorithm>
 
 #include <gpio.h>
+#include <potenciometro.h>
 #include <util.h>
 #include <pid.h>
 #include <bme.h>
@@ -12,14 +13,6 @@
 #include <uart.h>
 #include <display.h>
 #include <logger.h>
-
-#define TEMP_INTERNA 0xC1
-#define TEMP_POTENCIOMETRO 0xC2
-#define COMANDO_USUARIO 0xC3
-
-struct bme280_dev bme;
-
-
 
 void encerra_execucao(int exit_code){
     printf("Encerrando a execução do programa...\n");
@@ -30,26 +23,6 @@ void encerra_execucao(int exit_code){
     exit( std::min(exit_code, 1) );
 }
 
-void controle_potenciometro(){
-    double TI, TR, TE, intensidade = 0;
-    pid_configura_constantes(30.0, 0.2, 400.0);
-    while (1){
-        TI = solicita_uart<float>(TEMP_INTERNA);
-        intensidade = pid_controle(TI);
-
-        controle_temperatura(intensidade);
-
-        TR = solicita_uart<float>(TEMP_POTENCIOMETRO);
-
-        pid_atualiza_referencia(TR);
-
-        TE = get_current_temperature(&bme);
-        imprime_display(TI, TR, TE, "PID ");
-        escreve_temp_log(TI, TR, TE);
-        sleep(1);
-        
-    }
-}
 
 void menu(){
     while (1)
@@ -89,7 +62,7 @@ void init_APP(){
     desliga_ventoinha();
     inicia_display();
     inicia_log();
-    bme = conecta_bme();
+    conecta_bme();
     menu();
     encerra_execucao(0);
 }

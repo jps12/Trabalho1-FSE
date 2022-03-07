@@ -10,6 +10,7 @@
 #include <bme.h>
 
 int i2c_filestream;
+struct bme280_dev dev;
 
 int8_t user_i2c_read(uint8_t id, uint8_t reg_addr, uint8_t *data, uint16_t len) {
   write(i2c_filestream, &reg_addr, 1);
@@ -35,31 +36,30 @@ int8_t user_i2c_write(uint8_t id, uint8_t reg_addr, uint8_t *data, uint16_t len)
   return BME280_OK;
 }
 
-float get_current_temperature(struct bme280_dev *dev) {
+float get_current_temperature() {
   uint8_t settings_sel = 0;
   uint32_t req_delay;
   struct bme280_data comp_data;
 
-  dev->settings.osr_h = BME280_OVERSAMPLING_1X;
-  dev->settings.osr_p = BME280_OVERSAMPLING_16X;
-  dev->settings.osr_t = BME280_OVERSAMPLING_2X;
-  dev->settings.filter = BME280_FILTER_COEFF_16;
+  dev.settings.osr_h = BME280_OVERSAMPLING_1X;
+  dev.settings.osr_p = BME280_OVERSAMPLING_16X;
+  dev.settings.osr_t = BME280_OVERSAMPLING_2X;
+  dev.settings.filter = BME280_FILTER_COEFF_16;
 
   settings_sel = BME280_OSR_PRESS_SEL | BME280_OSR_TEMP_SEL |
                  BME280_OSR_HUM_SEL | BME280_FILTER_SEL;
 
-  bme280_set_sensor_settings(settings_sel, dev);
+  bme280_set_sensor_settings(settings_sel, &dev);
 
-  req_delay = bme280_cal_meas_delay(&dev->settings);
-  bme280_set_sensor_mode(BME280_FORCED_MODE, dev);
+  req_delay = bme280_cal_meas_delay(&dev.settings);
+  bme280_set_sensor_mode(BME280_FORCED_MODE, &dev);
 
-  dev->delay_ms(req_delay);
-  bme280_get_sensor_data(BME280_ALL, &comp_data, dev);
+  dev.delay_ms(req_delay);
+  bme280_get_sensor_data(BME280_ALL, &comp_data, &dev);
   return comp_data.temperature;
 }
 
-struct bme280_dev conecta_bme() {
-  struct bme280_dev dev;
+void conecta_bme() {
 
   int8_t rslt = BME280_OK;
   char i2c_file[] = "/dev/i2c-1";
@@ -85,5 +85,4 @@ struct bme280_dev conecta_bme() {
     fprintf(stderr, "Failed to initialize the device (code %+d).\n", rslt);
     exit(1);
   }
-  return dev;
 }
