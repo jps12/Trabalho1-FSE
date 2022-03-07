@@ -23,7 +23,7 @@ void controle_potenciometro(){
         pid_atualiza_referencia(TR);
 
         TE = get_current_temperature();
-        imprime_display(TI, TR, TE, "PID ");
+        imprime_temp_display(TI, TR, TE, "PID ");
         escreve_temp_log(TI, TR, TE);
         sleep(1);
     }

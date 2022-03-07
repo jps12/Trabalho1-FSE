@@ -18,7 +18,8 @@
 #include <string>
 #include <stdlib.h>
 #include <stdio.h>
-#include "display.h"
+#include <display.h>
+#include <app.h>
 
 // Define some device parameters
 #define I2C_ADDR   0x27 // I2C device address
@@ -47,63 +48,6 @@ void ClrLcd(void); // clr LCD return home
 void typeln(const char *s);
 void typeChar(char val);
 int fd;  // seen by all subroutines
-
-int main_func()   {
-
-  if (wiringPiSetup () == -1) exit (1);
-
-  fd = wiringPiI2CSetup(I2C_ADDR);
-
-  //printf("fd = %d ", fd);
-
-  inicia_display(); // setup LCD
-
-  char array1[] = "Hello world!";
-
-  while (1)   {
-
-    lcdLoc(LINE1);
-    typeln("Using wiringPi");
-    lcdLoc(LINE2);
-    typeln("Geany editor.");
-
-    delay(2000);
-    ClrLcd();
-    lcdLoc(LINE1);
-    typeln("I2c  Programmed");
-    lcdLoc(LINE2);
-    typeln("in C not Python.");
-
-    delay(2000);
-    ClrLcd();
-    lcdLoc(LINE1);
-    typeln("Arduino like");
-    lcdLoc(LINE2);
-    typeln("fast and easy.");
-
-    delay(2000);
-    ClrLcd();
-    lcdLoc(LINE1);
-    typeln(array1);
-
-    delay(2000);
-    ClrLcd(); // defaults LINE1
-    typeln("Int  ");
-    int value = 20125;
-    typeInt(value);
-
-    delay(2000);
-    lcdLoc(LINE2);
-    typeln("Float ");
-    float FloatVal = 10045.25989;
-    typeFloat(FloatVal);
-    delay(2000);
-  }
-
-  return 0;
-
-}
-
 
 // float to string
 void typeFloat(float myFloat)   {
@@ -185,7 +129,7 @@ void inicia_display()   {
   delayMicroseconds(500);
 }
 
-void imprime_display(float TI,float TR, float TE, std::string titulo)   {
+void imprime_temp_display(float TI,float TR, float TE, std::string titulo)   {
 
   if (wiringPiSetup () == -1) exit (1);
 
@@ -201,4 +145,17 @@ void imprime_display(float TI,float TR, float TE, std::string titulo)   {
   typeFloat(TR);
   typeln(" TE:");
   typeFloat(TE);
+}
+
+void imprime_string_display(std::string linha1, std::string linha2){
+
+  if (wiringPiSetup() == -1) encerra_execucao(1);
+
+  fd = wiringPiI2CSetup(I2C_ADDR);
+
+  inicia_display(); // setup LCD
+  lcdLoc(LINE1);
+  typeln(linha1.c_str());
+  lcdLoc(LINE2);
+  typeln(linha2.c_str());
 }

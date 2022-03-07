@@ -20,11 +20,8 @@
 #define ENABLE 0b00000100
 
 void inicia_display(void);
-void imprime_display(float tempI, float tempR, float tempE, std::string titulo);
+void imprime_temp_display(float TI,float TR, float TE, std::string titulo);
+void imprime_string_display(std::string linha1, std::string linha2 = "");
 
-// added by Lewis
-void typeFloat(float myFloat);
-void displayLoc(int line);  //move cursor
-void typeln(const char *s);
 
 #endif
