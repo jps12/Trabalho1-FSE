@@ -11,6 +11,7 @@
 #include <bme_aux.h>
 #include <uart.h>
 #include <display.h>
+#include <logger.h>
 
 #define TEMP_INTERNA 0xC1
 #define TEMP_POTENCIOMETRO 0xC2
@@ -18,8 +19,11 @@
 
 struct bme280_dev bme;
 
+
+
 void encerra_execucao(int exit_code){
     printf("Encerrando a execução do programa...\n");
+    fecha_log();
     desliga_resistencia();
     desliga_ventoinha();
     fecha_UART();
@@ -41,6 +45,7 @@ void controle_potenciometro(){
 
         TE = get_current_temperature(&bme);
         imprime_display(TI, TR, TE, "PID ");
+        escreve_temp_log(TI, TR, TE);
         sleep(1);
         
     }
@@ -83,6 +88,7 @@ void init_APP(){
     desliga_resistencia();
     desliga_ventoinha();
     inicia_display();
+    inicia_log();
     bme = conecta_bme();
     menu();
     encerra_execucao(0);
