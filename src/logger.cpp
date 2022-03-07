@@ -4,7 +4,7 @@
 #include <ctime>
 
 
-static std::string nome_arquivo = "../log/log;csv";
+static std::string nome_arquivo = "../log/log.csv";
 static std::ofstream arquivo;
 static std::string tempo_agora;
 
@@ -20,7 +20,7 @@ void inicia_log(){
 
 void escreve_temp_log(int TI, int TR, int TE){
     get_tempo();
-    arquivo << tempo_agora << ';' << TI << ';' << TR << ';' << TE << '\n';
+    arquivo << tempo_agora << ',' << TI << ',' << TR << ',' << TE << '\n';
 }
 
 void fecha_log(){

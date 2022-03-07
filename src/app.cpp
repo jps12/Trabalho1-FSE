@@ -57,9 +57,10 @@ void menu(int value = 0){
         switch (opcao)
         {
         case 1:
+            printf("[1] Potenciometro:\n");
             controle_potenciometro();
             break;
-        case 7:
+        case 9:
             puts("Finalizando o programa\n");
             return;
             break;

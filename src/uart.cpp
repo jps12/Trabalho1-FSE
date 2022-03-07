@@ -7,6 +7,7 @@
 #include <fcntl.h>          //Used for UART
 #include <termios.h>        //Used for UART
 #include <uart.h>
+#include <app.h>
 
 template int solicita_uart<int>(int sub_codigo);
 template float solicita_uart<float>(int sub_codigo);
