@@ -10,13 +10,15 @@
 
 static float TR = 0;
 
-void terminal_atualiza_tr(float _TR)
+void terminal_le_tr()
 {
-    TR = _TR;
+    printf("Insira a temperatura de referência\n");
+    scanf(" %f", &TR);
 }
 
 void terminal_controle()
 {
+    terminal_le_tr();
     double TI, TE, intensidade = 0;
     while (1)
     {
