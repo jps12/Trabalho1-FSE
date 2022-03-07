@@ -7,10 +7,18 @@
 #include <vector>
 #include <tuple>
 
+#include <app.h>
+#include "gpio.h"
 #include "logger.h"
-#include "app.h"
+#include "uart.h"
+#include "pid.h"
+#include "display.h"
+#include "bme_aux.h"
 
 #define LIMITE_TEMPO 60
+#define TEMP_INTERNA 0xC1
+#define TEMP_POTENCIOMETRO 0xC2
+#define COMANDO_USUARIO 0xC3
 
 std::ifstream arquivo;
 std::string nome_arquivo = "./assets/reflow.csv";
@@ -57,12 +65,24 @@ bool atualiza_tr(float& TR, int& tempo_atual){
 
 void controle_reflow(){
     inicia_arquivo_reflow();
-    float TR;
+    float TR, TI, TE;
+    double intensidade;
     int tempo_atual = 0;
     while(atualiza_tr(TR, tempo_atual)){
+        TI = solicita_uart<float>(TEMP_INTERNA);
+        intensidade = pid_controle(TI);
+
+        controle_temperatura(intensidade);
+
+        pid_atualiza_referencia(TR);
+
+        TE = get_current_temperature();
+
+        imprime_temp_display(TI, TR, TE, "PID ");
+        escreve_temp_log(TI, TR, TE);
+
         std::string message = "Tempo: " + std::to_string(tempo_atual) + ",TR: " + std::to_string(TR);
         escreve_string_log(message);
-        std::cout << message << '\n';
         sleep(1);
     }
 }
