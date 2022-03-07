@@ -5,6 +5,8 @@
  *      Author: Renato Coral Sampaio
  */
 #include <string.h>
+#include <string>
+
 short CRC16(short crc, char data)
 {
     const unsigned short tbl[256] = {
@@ -58,4 +60,11 @@ void CRC_configura(unsigned char *buffer, int size)
 {
     short crc16 = calcula_CRC(buffer, size - 2);
     memcpy(buffer + size - 2, &crc16, 2);
+}
+
+bool CRC_verifica(std::string buffer, int size){
+    short crc16 = calcula_CRC((unsigned char *)buffer.c_str(), size);
+    short _crc16;
+    memcpy(&_crc16, buffer.c_str() + size - 2, 2);
+    return crc16 == _crc16;
 }
