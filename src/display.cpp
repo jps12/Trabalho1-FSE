@@ -12,10 +12,10 @@
 *
 */
 
-extern "C"{
-  #include <wiringPiI2C.h>
-  #include <wiringPi.h>
-}
+
+#include <wiringPiI2C.h>
+#include <wiringPi.h>
+#include <string>
 #include <stdlib.h>
 #include <stdio.h>
 #include "display.h"
@@ -35,7 +35,7 @@ extern "C"{
 
 #define ENABLE  0b00000100 // Enable bit
 
-void lcd_init(void);
+void inicia_display(void);
 void lcd_byte(int bits, int mode);
 void lcd_toggle_enable(int bits);
 
@@ -56,7 +56,7 @@ int main_func()   {
 
   //printf("fd = %d ", fd);
 
-  lcd_init(); // setup LCD
+  inicia_display(); // setup LCD
 
   char array1[] = "Hello world!";
 
@@ -174,7 +174,7 @@ void lcd_toggle_enable(int bits)   {
 }
 
 
-void lcd_init()   {
+void inicia_display()   {
   // Initialise display
   lcd_byte(0x33, LCD_CMD); // Initialise
   lcd_byte(0x32, LCD_CMD); // Initialise
@@ -183,4 +183,22 @@ void lcd_init()   {
   lcd_byte(0x28, LCD_CMD); // Data length, number of lines, font size
   lcd_byte(0x01, LCD_CMD); // Clear display
   delayMicroseconds(500);
+}
+
+void imprime_display(float TI,float TR, float TE, std::string titulo)   {
+
+  if (wiringPiSetup () == -1) exit (1);
+
+  fd = wiringPiI2CSetup(I2C_ADDR);
+
+  inicia_display(); // setup LCD
+  lcdLoc(LINE1);
+  typeln(titulo.c_str());
+  typeln("TI");
+  typeFloat(TI);
+  typeln(" TR");
+  typeFloat(TR);
+  lcdLoc(LINE2);
+  typeln("TE");
+  typeFloat(TE);
 }

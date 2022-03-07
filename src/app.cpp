@@ -63,7 +63,7 @@ void init_APP(){
     configura_UART();
     desliga_resistencia();
     desliga_ventoinha();
-    lcd_init();
+    inicia_display();
     menu();
     encerra_execucao(0);
 }
